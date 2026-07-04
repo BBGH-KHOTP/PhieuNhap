@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Phiếu Nhập Kho - THACO</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    
+    @page {
+      size: A4 landscape;
+      margin: 10mm 8mm;
+      background-color: #ffffff;
+    }
+    
+    body {
+      font-family: "Times New Roman", Times, serif;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      color: #000000;
+      font-size: 10.5pt;
+    }
+    
+    /* Layout chính dùng bảng cố định thay thế Grid/Flex để chống vỡ khi in */
+    .layout-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: none;
+      table-layout: fixed;
+    }
+    
+    .layout-cell {
+      width: 47%;
+      vertical-align: top;
+      padding: 0 5mm;
+    }
+    
+    .divider-cell {
+      width: 6%;
+      position: relative;
+      vertical-align: top;
+      text-align: center;
+    }
+    
+    /* Định dạng đường cắt */
+    .cut-line {
+      border-left: 1.5px dashed #444444;
+      height: 180mm;
+      margin: 0 auto;
+      position: relative;
+    }
+    
+    .scissors {
+      position: absolute;
+      top: 15mm;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #ffffff;
+      padding: 4px 0;
+      font-size: 14pt;
+    }
+    
+    /* Header thông tin công ty */
+    .header-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: none;
+      margin-bottom: 4mm;
+    }
+    
+    .header-table td {
+      border: none;
+      padding: 0;
+      vertical-align: top;
+      font-size: 9.5pt;
+      line-height: 1.4;
+    }
+    
+    .title-section {
+      text-align: center;
+      margin: 3mm 0 2mm 0;
+    }
+    
+    .main-title {
+      font-size: 15pt;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    
+    .sub-title {
+      font-size: 11pt;
+      font-style: italic;
+      margin-top: 1mm;
+    }
+    
+    /* Phần thông tin chung */
+    .info-block {
+      margin-bottom: 4mm;
+      line-height: 1.6;
+    }
+    
+    .info-row {
+      margin-bottom: 1.5mm;
+      width: 100%;
+    }
+    
+    .info-label {
+      white-space: nowrap;
+    }
+    
+    .info-value-dotted {
+      border-bottom: 1px dotted #000000;
+      display: inline-block;
+      width: 70%;
+      padding-left: 5px;
+      vertical-align: bottom;
+    }
+    
+    /* Bảng chi tiết vật tư */
+    .main-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 3mm;
+      margin-bottom: 4mm;
+    }
+    
+    .main-table th, .main-table td {
+      border: 1px solid #000000;
+      padding: 5px 4px;
+      font-size: 10pt;
+      text-align: center;
+      vertical-align: middle;
+    }
+    
+    .main-table th {
+      font-weight: bold;
+      background-color: #f2f2f2;
+    }
+    
+    .text-left {
+      text-align: left !important;
+    }
+    
+    .font-bold {
+      font-weight: bold;
+    }
+    
+    /* Chữ ký cuối trang */
+    .footer-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: none;
+      margin-top: 4mm;
+    }
+    
+    .footer-table td {
+      border: none;
+      width: 33.33%;
+      text-align: center;
+      vertical-align: top;
+      font-size: 10pt;
+      line-height: 1.4;
+    }
+    
+    .signature-space {
+      height: 18mm;
+    }
+    
+    .signer-name {
+      font-weight: bold;
+      margin-top: 2mm;
+    }
+
+    @media print {
+      .no-print { display: none !important; }
+    }
+    .btn-print { 
+      position: fixed; top: 20px; right: 20px; z-index: 999;
+      padding: 10px 20px; background: #d32f2f; color: white; 
+      border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="btn-print no-print" onclick="window.print()">🖨️ In phiếu kho</button>
+
+  <table class="layout-table">
+    <tr>
+      <!-- LIÊN 1: NỬA BÊN TRÁI -->
+      <td class="layout-cell">
+        <table class="header-table">
+          <tr>
+            <td style="width: 58%;">
+              <span class="font-bold">Đơn vị: CTY TNHH TỔ HỢP CƠ KHÍ THACO</span><br>
+              <span class="font-bold">Bộ phận: Phòng cung ứng vật tư</span>
+            </td>
+            <td style="width: 42%; text-align: center;">
+              <span class="font-bold">Mẫu số: 01 - VT</span><br>
+              <span style="font-size: 8.5pt;">(B.hành TT số: 200/2014/TT-BTC<br>Ngày 22/12/2014 của Bộ trưởng BTC)</span>
+            </td>
+          </tr>
+        </table>
+        
+        <div class="title-section">
+          <div class="main-title">PHIẾU NHẬP KHO</div>
+          <div class="sub-title">Số: <<[Số BBGH]>></div>
+        </div>
+        
+        <div class="info-block">
+          <div class="info-row"><span class="info-label">- Họ tên người giao:</span> <span class="info-value-dotted" style="width: 68%;"><<[Tên người tạo]>></span></div>
+          <div class="info-row"><span class="info-label">- Lý do nhập kho:</span> <span class="info-value-dotted" style="width: 71%;"><<[Nội dung]>></span></div>
+          <div class="info-row"><span class="info-label">- Xuất tại kho:</span> <span class="info-value-dotted" style="width: 76%;"><<[Địa chỉ]>></span></div>
+        </div>
+        
+        <table class="main-table">
+          <thead>
+            <tr>
+              <th style="width: 7%;">Stt</th>
+              <th style="width: 15%;">Mã SP</th>
+              <th style="width: 35%;">Tên sản phẩm</th>
+              <th style="width: 11%;">Đơn vị tính</th>
+              <th style="width: 10%;">Số lượng</th>
+              <th style="width: 22%;">Ghi chú</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Vòng lặp lấy dữ liệu chi tiết vật tư từ AppSheet -->
+            <<Start: [Related ChiTietVatTus]>>
+            <tr>
+              <td><<[_RowNumber]>></td>
+              <td><<[Mã SP]>></td>
+              <td class="text-left"><<[Tên SP]>></td>
+              <td><<[Đơn vị tính]>></td>
+              <td><<[Số lượng]>></td>
+              <td><<[QRCode]>></td>
+            </tr>
+            <<End>>
+            
+            <!-- Hàng tổng cộng -->
+            <tr class="font-bold">
+              <td colspan="4">TỔNG CỘNG</td>
+              <td><<SUM([Related ChiTietVatTus][Số lượng])>></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <table class="footer-table">
+          <tr>
+            <td>
+              <span class="font-bold">Người nhận</span><br>
+              <span style="font-style: italic; font-size: 9.5pt;">(Ký, họ tên)</span>
+              <div class="signature-space"></div>
+            </td>
+            <td>
+              <span class="font-bold">Người giao</span><br>
+              <span style="font-style: italic; font-size: 9.5pt;">(Ký, họ tên)</span>
+              <div class="signature-space"></div>
+            </td>
+            <td>
+              <span style="font-style: italic; font-size: 9.5pt;">Ngày <<TEXT([Ngày], "DD/MM/YYYY")>></span><br>
+              <span class="font-bold">Người lập phiếu</span><br>
+              <span style="font-style: italic; font-size: 9.5pt;">(Ký, họ tên)</span>
+              <div class="signature-space"></div>
+              <div class="signer-name"><&zwj;<<[Tên người tạo]>></div>
+            </td>
+          </tr>
+        </table>
+      </td>
+      
+      <!-- ĐƯỜNG CẮT GIỮA -->
+      <td class="divider-cell">
+        <div class="cut-line"></div>
+        <div class="scissors">✂️</div>
+      </td>
+      
+      <!-- LIÊN 2: NỬA BÊN PHẢI (SAO CHÉP ĐỒNG BỘ DỮ LIỆU) -->
+      <td class="layout-cell">
+        <table class="header-table">
+          <tr>
+            <td style="width: 58%;">
+              <span class="font-bold">Đơn vị: CTY TNHH TỔ HỢP CƠ KHÍ THACO</span><br>
+              <span class="font-bold">Bộ phận: Phòng cung ứng vật tư</span>
+            </td>
+            <td style="width: 42%; text-align: center;">
+              <span class="font-bold">Mẫu số: 01 - VT</span><br>
+              <span style="font-size: 8.5pt;">(B.hành TT số: 200/2014/TT-BTC<br>Ngày 22/12/2014 của Bộ trưởng BTC)</span>
+            </td>
+          </tr>
+        </table>
+        
+        <div class="title-section">
+          <div class="main-title">PHIẾU NHẬP KHO</div>
+          <div class="sub-title">Số: <<[Số BBGH]>></div>
+        </div>
+        
+        <div class="info-block">
+          <div class="info-row"><span class="info-label">- Họ tên người giao:</span> <span class="info-value-dotted" style="width: 68%;"><<[Tên người tạo]>></span></div>
+          <div class="info-row"><span class="info-label">- Lý do nhập kho:</span> <span class="info-value-dotted" style="width: 71%;"><<[Nội dung]>></span></div>
+          <div class="info-row"><span class="info-label">- Xuất tại kho:</span> <span class="info-value-dotted" style="width: 76%;"><<[Địa chỉ]>></span></div>
+        </div>
+        
+        <table class="main-table">
+          <thead>
+            <tr>
+              <th style="width: 7%;">Stt</th>
+              <th style="width: 15%;">Mã SP</th>
+              <th style="width: 35%;">Tên sản phẩm</th>
+              <th style="width: 11%;">Đơn vị tính</th>
+              <th style="width: 10%;">Số lượng</th>
+              <th style="width: 22%;">Ghi chú</th>
+            </tr>
+          </thead>
+          <tbody>
+            <<Start: [Related ChiTietVatTus]>>
+            <tr>
+              <td><<[_RowNumber]>></td>
+              <td><<[Mã SP]>></td>
+              <td class="text-left"><<[Tên SP]>></td>
+              <td><<[Đơn vị tính]>></td>
+              <td><<[Số lượng]>></td>
+              <td><<[QRCode]>></td>
+            </tr>
+            <<End>>
+            <tr class="font-bold">
+              <td colspan="4">TỔNG CỘNG</td>
+              <td><<SUM([Related ChiTietVatTus][Số lượng])>></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <table class="footer-table">
+          <tr>
+            <td>
+              <span class="font-bold">Người nhận</span><br>
+              <span style="font-style: italic; font-size: 9.5pt;">(Ký, họ tên)</span>
+              <div class="signature-space"></div>
+            </td>
+            <td>
+              <span class="font-bold">Người giao</span><br>
+              <span style="font-style: italic; font-size: 9.5pt;">(Ký, họ tên)</span>
+              <div class="signature-space"></div>
+            </td>
+            <td>
+              <span style="font-style: italic; font-size: 9.5pt;">Ngày <<TEXT([Ngày], "DD/MM/YYYY")>></span><br>
+              <span class="font-bold">Người lập phiếu</span><br>
+              <span style="font-style: italic; font-size: 9.5pt;">(Ký, họ tên)</span>
+              <div class="signature-space"></div>
+              <div class="signer-name"><&zwj;<<[Tên người tạo]>></div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
